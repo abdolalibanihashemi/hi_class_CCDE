@@ -25,7 +25,7 @@ enum gravity_model {propto_omega, propto_scale,
     constant_alphas,
     eft_alphas_power_law, eft_gammas_power_law, eft_gammas_exponential,
     galileon, nkgb,
-    brans_dicke,EQ,EQGeff,TG,EQMp,
+    brans_dicke,EQ,EQGeff,TG,EQMp,EQGammaMu,
     quintessence_monomial, quintessence_tracker,
     alpha_attractor_canonical
 };

@@ -8,7 +8,7 @@
  * Default initial value of scale factor used in the integration of background quantities.
  * For models like ncdm, the code may decide to start the integration earlier.
  */
-class_precision_parameter(a_ini_over_a_today_default,double,1.e-14)    
+class_precision_parameter(a_ini_over_a_today_default,double,1.e-9)    
 /**
  * Number of background integration steps that are stored in the output vector
  */
@@ -512,7 +512,7 @@ class_precision_parameter(selection_tophat_edge,double,0.1) /**< controls how sm
 
 class_precision_parameter(sigma_k_per_decade,double,80.) /**< logarithmic stepsize controlling the precision of integrals for sigma(R,k) and similar quantitites */
 
-class_precision_parameter(nonlinear_min_k_max,double,5.0) /**< when
+class_precision_parameter(nonlinear_min_k_max,double,10.0) /**< when
                                using an algorithm to compute nonlinear
                                corrections, like halofit or hmcode,
                                k_max must be at least equal to this
@@ -619,7 +619,7 @@ class_precision_parameter(einstein00_friction,double,1.) /**< friction term muli
 
 /* This is the time at which we test for the initial value of the QS approximation.
 It has to be at least a_ini_over_a_today_default */
-class_precision_parameter(a_ini_test_qs_smg,double,1.e-14) 
+class_precision_parameter(a_ini_test_qs_smg,double,1.e-9) 
 
 class_precision_parameter(n_min_qs_smg,int,1e2) /**< minimum number of steps used to sample the quantities in the quasi-static approximation (qs_smg) */
 class_precision_parameter(n_max_qs_smg,int,1e4) /**< maximum number of steps used to sample the quantities in the quasi-static approximation (qs_smg) */

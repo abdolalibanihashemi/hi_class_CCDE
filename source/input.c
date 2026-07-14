@@ -81,13 +81,15 @@ int input_init(int argc,
              errmsg,
              errmsg);
 
+
+
+
   /** Free local struture */
   class_call(parser_free(&fc),
              errmsg,
              errmsg);
 
   return _SUCCESS_;
-
 }
 
 
@@ -412,15 +414,20 @@ int input_read_from_file(struct file_content * pfc,
 
   class_read_int("input_verbose",input_verbose);
   if (input_verbose >0) printf("Reading input parameters\n");
-
   /** Find out if shooting necessary and, eventually, shoot and initialize
       read parameters */
+
+
+
+
   class_call(input_shooting(pfc,ppr,pba,pth,ppt,ptr,ppm,phr,pfo,ple,psd,pop,
                             input_verbose,
                             &has_shooting,
                             errmsg),
              errmsg,
              errmsg);
+             
+
 
   /** If no shooting is necessary, initialize read parameters without it */
   if (has_shooting == _FALSE_){
@@ -575,6 +582,13 @@ int input_shooting(struct file_content * pfc,
   /* for smg: no tuned parameters yet */
   pba->parameters_tuned_smg = _FALSE_;
 
+
+
+  class_call(input_read_parameters(pfc,ppr,pba,pth,ppt,ptr,ppm,phr,pfo,ple,psd,pop,
+                                     errmsg),
+               errmsg,
+               errmsg); //EQ This was added to see if alpha=0 or not. In case alpha ~ 0, there must not be shooting for M2_today_smg, otherwise it will be problematic. 
+
   /** Do we need to fix unknown parameters? */
   unknown_parameters_size = 0;
   fzw.required_computation_stage = 0;
@@ -601,6 +615,16 @@ int input_shooting(struct file_content * pfc,
 
     }
   }
+
+// EQ 
+  if(pba->gravity_model_smg == EQGammaMu && (pba->parameters_smg[4] > 0.00001||pba->parameters_smg[4] <-0.00001)){
+    target_indices[unknown_parameters_size] = 8; // M2_today_smg
+    fzw.required_computation_stage = MAX(fzw.required_computation_stage,target_cs[8]);
+    unknown_parameters_size++;
+  }
+
+
+
   /** In the case of unknown parameters, start shooting... */
   if (unknown_parameters_size > 0) {
 
@@ -891,6 +915,8 @@ int input_shooting(struct file_content * pfc,
 
   /* Now Horndeski should be tuned */
   pba->parameters_tuned_smg = _TRUE_;
+
+
 
   return _SUCCESS_;
 

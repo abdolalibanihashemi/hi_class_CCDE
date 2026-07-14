@@ -708,7 +708,8 @@ int gravity_functions_As_from_alphas_smg(
 		pvecback[pba->index_bg_G_eff_smg] = 1./M2;
 	}
 	else {
-		pvecback[pba->index_bg_G_eff_smg] = (1. - bra*beta_1*pow(bra*beta_1 - beta_2,-1))/M2;
+    //pvecback[pba->index_bg_G_eff_smg] = (1. - bra*beta_1*pow(bra*beta_1 - beta_2,-1))/M2; EQ 
+		pvecback[pba->index_bg_G_eff_smg] = (1. + bra*beta_1*pow(bra*beta_1 - beta_2,-1))/M2; 
 	}
 
   if (2.*(run - ten)*beta_1 + ten*beta_2 == 0.) {

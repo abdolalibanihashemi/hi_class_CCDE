@@ -504,6 +504,22 @@ int gravity_models_gravity_properties_smg(
     
    }
 
+
+  if (strcmp(string1,"EQGammaMu") == 0) {
+    pba->gravity_model_smg = EQGammaMu;
+    pba->field_evolution_smg = _TRUE_;
+    flag2=_TRUE_;
+
+    pba->parameters_size_smg = 6;
+    class_read_list_of_doubles("parameters_smg",pba->parameters_smg,pba->parameters_size_smg);
+
+    pba->tuning_index_2_smg = 5;
+    class_read_double("param_shoot_M2_smg",pba->parameters_smg[pba->tuning_index_2_smg]);
+
+    
+   }
+
+
    if (strcmp(string1,"EQ") == 0) {
     pba->gravity_model_smg = EQ;
     pba->field_evolution_smg = _TRUE_;
@@ -560,7 +576,7 @@ int gravity_models_gravity_properties_smg(
 
   class_test(flag2==_FALSE_,
              errmsg,
-             "could not identify gravity_theory value, check that it is one of 'propto_omega', 'propto_scale', 'constant_alphas', 'eft_alphas_power_law', 'eft_gammas_power_law', 'eft_gammas_exponential', 'brans_dicke','EQ','EQMp','EQGeff','TG', 'galileon', 'nKGB', 'quintessence_monomial', 'quintessence_tracker', 'alpha_attractor_canonical' ...");
+             "could not identify gravity_theory value, check that it is one of 'propto_omega', 'propto_scale', 'constant_alphas', 'eft_alphas_power_law', 'eft_gammas_power_law', 'eft_gammas_exponential', 'brans_dicke','EQ','EQMp','EQGammaMu','EQGeff','TG', 'galileon', 'nKGB', 'quintessence_monomial', 'quintessence_tracker', 'alpha_attractor_canonical' ...");
 
   return _SUCCESS_;
 }
@@ -800,6 +816,29 @@ int gravity_models_get_Gs_smg(
    pgf->G4_phiphi = aalpha;
   }
 
+
+   else if(pba->gravity_model_smg == EQGammaMu){
+
+  
+
+    double llambda = pba->parameters_smg[2];
+    double ssigma = pba->parameters_smg[3];
+    double aalpha = pba->parameters_smg[4];
+    double phi2today = pba->parameters_smg[5];
+    
+   pgf->G2 = X - pow(pba->H0,2)*llambda/pow(phi,ssigma);
+   pgf->G2_X = 1.;
+   pgf->G2_phi = pow(pba->H0,2)*llambda*ssigma/pow(phi,1.+ssigma);
+   pgf->G2_phiphi = -pow(pba->H0,2)*llambda*ssigma*(ssigma+1.)/pow(phi,2.+ssigma);
+
+   pgf->DG4 = aalpha*(pow(phi,2.)-phi2today)*(pow(phi,2.)-phi2today)/2.;
+   pgf->G4 = 1./2.+ aalpha*(pow(phi,2.)-phi2today)*(pow(phi,2.)-phi2today)/2.;
+   pgf->G4_phi = 2*aalpha*phi*(pow(phi,2.)-phi2today);
+   pgf->G4_phiphi = 4*aalpha*phi*phi+2*aalpha*(pow(phi,2.)-phi2today);
+   pgf->G4_phiphiphi = 12*aalpha*phi;
+   
+  
+  }
 
 
 
@@ -1288,6 +1327,10 @@ int gravity_models_initial_conditions_smg(
 			pvecback_integration[pba->index_bi_phi_prime_smg] = pow(10.0,pba->parameters_smg[1]);
 			break;
     
+      case EQGammaMu:
+			pvecback_integration[pba->index_bi_phi_smg] = pow(10.0,pba->parameters_smg[0]);
+			pvecback_integration[pba->index_bi_phi_prime_smg] = pow(10.0,pba->parameters_smg[1]);
+			break;
 
 
     case TG:
@@ -1470,6 +1513,12 @@ int gravity_models_print_stdout_smg(
    
     case EQMp:
       printf("Modified gravity: EQMp with parameters: \n");
+      printf("aalpha=%g,ssigma=%g,llambda=%g, phi_ini = %g (phi_0 = %g), phi_prime_ini = %g ,phi^2_today = %g\n",
+         pba->parameters_smg[4],pba->parameters_smg[3],pba->parameters_smg[2],pow(10.0,pba->parameters_smg[0]),pba->phi_0_smg,pow(10.0,pba->parameters_smg[1]),pba->parameters_smg[5]);
+    break;
+
+case EQGammaMu:
+      printf("Modified gravity: EQGammaMu with parameters: \n");
       printf("aalpha=%g,ssigma=%g,llambda=%g, phi_ini = %g (phi_0 = %g), phi_prime_ini = %g ,phi^2_today = %g\n",
          pba->parameters_smg[4],pba->parameters_smg[3],pba->parameters_smg[2],pow(10.0,pba->parameters_smg[0]),pba->phi_0_smg,pow(10.0,pba->parameters_smg[1]),pba->parameters_smg[5]);
     break;
