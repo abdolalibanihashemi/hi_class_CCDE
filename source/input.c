@@ -616,7 +616,7 @@ int input_shooting(struct file_content * pfc,
     }
   }
 
-// EQ 
+// EQ EQGammaMu: if we want to tune M2_today_smg, we need to shoot for it. This is only possible if alpha != 0. 
   if(pba->gravity_model_smg == EQGammaMu && (pba->parameters_smg[4] > 0.00001||pba->parameters_smg[4] <-0.00001)){
     target_indices[unknown_parameters_size] = 8; // M2_today_smg
     fzw.required_computation_stage = MAX(fzw.required_computation_stage,target_cs[8]);
