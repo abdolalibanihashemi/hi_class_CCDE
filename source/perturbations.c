@@ -481,8 +481,8 @@ int perturbations_output_data(
           class_store_double(dataptr,tk[ppt->index_tp_delta_dcdm],ppt->has_source_delta_dcdm,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_delta_dr],ppt->has_source_delta_dr,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_delta_scf],ppt->has_source_delta_scf,storeidx);
-          class_store_double(dataptr,tk[ppt->index_tp_x_smg],ppt->has_source_x_smg,storeidx); // EQ scalar-field perturbation transfer
-          class_store_double(dataptr,tk[ppt->index_tp_x_prime_smg],ppt->has_source_x_prime_smg,storeidx); // EQ scalar-field derivative perturbation transfer
+          class_store_double(dataptr,tk[ppt->index_tp_x_smg],ppt->has_source_x_smg,storeidx); // CCDE scalar-field perturbation transfer
+          class_store_double(dataptr,tk[ppt->index_tp_x_prime_smg],ppt->has_source_x_prime_smg,storeidx); // CCDE scalar-field derivative perturbation transfer
           class_store_double(dataptr,tk[ppt->index_tp_delta_m],ppt->has_source_delta_m,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_delta_tot],ppt->has_source_delta_tot,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_phi],ppt->has_source_phi,storeidx);
@@ -572,8 +572,8 @@ int perturbations_output_titles(
       class_store_columntitle(titles,"d_dcdm",pba->has_dcdm);
       class_store_columntitle(titles,"d_dr",pba->has_dr);
       class_store_columntitle(titles,"d_scf",pba->has_scf);
-      class_store_columntitle(titles,"vx_smg",pba->has_smg); /* EQ: Scalar field smg */
-      class_store_columntitle(titles,"vx_prime_smg",pba->has_smg); /* EQ: Scalar field smg */
+      class_store_columntitle(titles,"vx_smg",pba->has_smg); /* CCDE scalar-field perturbation */
+      class_store_columntitle(titles,"vx_prime_smg",pba->has_smg); /* CCDE scalar-field perturbation derivative */
       class_store_columntitle(titles,"d_m",ppt->has_source_delta_m);
       class_store_columntitle(titles,"d_tot",ppt->has_source_delta_tot);
       class_store_columntitle(titles,"phi",ppt->has_source_phi);

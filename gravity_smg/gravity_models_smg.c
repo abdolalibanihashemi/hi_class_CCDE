@@ -469,85 +469,18 @@ int gravity_models_gravity_properties_smg(
 
 
 
-  if (strcmp(string1,"EQGeff") == 0) {
-    pba->gravity_model_smg = EQGeff;
+  if (strcmp(string1,"CCDE") == 0) {
+    pba->gravity_model_smg = CCDE;
     pba->field_evolution_smg = _TRUE_;
     flag2=_TRUE_;
 
-    pba->parameters_size_smg = 6;
-    class_read_list_of_doubles("parameters_smg",pba->parameters_smg,pba->parameters_size_smg);
-
-
-    pba->G_eff_tuning_smg = _TRUE_;
-    pba->G_eff_today_smg = 1.;
-    pba->tuning_index_2_smg = 5;
-    class_read_double("param_shoot_G_eff_smg",pba->parameters_smg[pba->tuning_index_2_smg]);
-    printf("updating param[%d] = %g to tune Geff_today \n",pba->tuning_index_2_smg,pba->parameters_smg[pba->tuning_index_2_smg]); 
-   }
-   
-
-   if (strcmp(string1,"EQMp") == 0) {
-    pba->gravity_model_smg = EQMp;
-    pba->field_evolution_smg = _TRUE_;
-    flag2=_TRUE_;
-
-    pba->parameters_size_smg = 6;
-    class_read_list_of_doubles("parameters_smg",pba->parameters_smg,pba->parameters_size_smg);
-
-
-    pba->M2_tuning_smg = _TRUE_;
-    pba->M2_today_smg = 1.;
-    pba->tuning_index_2_smg = 5;
-    class_read_double("param_shoot_M2_smg",pba->parameters_smg[pba->tuning_index_2_smg]);
-    printf("updating param[%d] = %g to tune M2 \n",pba->tuning_index_2_smg,pba->parameters_smg[pba->tuning_index_2_smg]);
-   
-    
-   }
-
-
-  if (strcmp(string1,"EQGammaMu") == 0) {
-    pba->gravity_model_smg = EQGammaMu;
-    pba->field_evolution_smg = _TRUE_;
-    flag2=_TRUE_;
-
+    /* log10(phi_ini), log10(phi_prime_ini), Lambda, sigma, alpha, phi_today^2 */
     pba->parameters_size_smg = 6;
     class_read_list_of_doubles("parameters_smg",pba->parameters_smg,pba->parameters_size_smg);
 
     pba->tuning_index_2_smg = 5;
     class_read_double("param_shoot_M2_smg",pba->parameters_smg[pba->tuning_index_2_smg]);
-
-    
-   }
-
-
-   if (strcmp(string1,"EQ") == 0) {
-    pba->gravity_model_smg = EQ;
-    pba->field_evolution_smg = _TRUE_;
-    flag2=_TRUE_;
-
-    pba->parameters_size_smg = 5;
-    class_read_list_of_doubles("parameters_smg",pba->parameters_smg,pba->parameters_size_smg);
-    
-   }
-
-
-
-
-
-
-
-  if (strcmp(string1,"TG") == 0) {
-    pba->gravity_model_smg = TG;
-    pba->field_evolution_smg = _TRUE_;
-    flag2=_TRUE_;
-
-    pba->parameters_size_smg = 5;
-    class_read_list_of_doubles("parameters_smg",pba->parameters_smg,pba->parameters_size_smg);
-    
-   }
-
-
-
+  }
 
 
 
@@ -576,7 +509,7 @@ int gravity_models_gravity_properties_smg(
 
   class_test(flag2==_FALSE_,
              errmsg,
-             "could not identify gravity_theory value, check that it is one of 'propto_omega', 'propto_scale', 'constant_alphas', 'eft_alphas_power_law', 'eft_gammas_power_law', 'eft_gammas_exponential', 'brans_dicke','EQ','EQMp','EQGammaMu','EQGeff','TG', 'galileon', 'nKGB', 'quintessence_monomial', 'quintessence_tracker', 'alpha_attractor_canonical' ...");
+             "could not identify gravity_theory value, check that it is one of 'propto_omega', 'propto_scale', 'constant_alphas', 'eft_alphas_power_law', 'eft_gammas_power_law', 'eft_gammas_exponential', 'brans_dicke', 'CCDE', 'galileon', 'nKGB', 'quintessence_monomial', 'quintessence_tracker', 'alpha_attractor_canonical' ...");
 
   return _SUCCESS_;
 }
@@ -775,118 +708,26 @@ int gravity_models_get_Gs_smg(
 
 
 
-  else if(pba->gravity_model_smg == EQGeff){
+  else if(pba->gravity_model_smg == CCDE){
 
-    double llambda = pba->parameters_smg[2];
-    double ssigma = pba->parameters_smg[3];
-    double aalpha = pba->parameters_smg[4];
-    double phi2shift = pba->parameters_smg[5];
-    
-   pgf->G2 = X - pow(pba->H0,2)*llambda/pow(phi,ssigma);
-   pgf->G2_X = 1.;
-   pgf->G2_phi = pow(pba->H0,2)*llambda*ssigma/pow(phi,1.+ssigma);
-   pgf->G2_phiphi = -pow(pba->H0,2)*llambda*ssigma*(ssigma+1.)/pow(phi,2.+ssigma);
+    double potential_amplitude = pba->parameters_smg[2];
+    double potential_exponent = pba->parameters_smg[3];
+    double coupling = pba->parameters_smg[4];
+    double phi_today_squared = pba->parameters_smg[5];
+    double shifted_phi_squared = pow(phi,2.)-phi_today_squared;
 
-   pgf->DG4 = aalpha*(pow(phi,2.)-phi2shift)/2.;
-   pgf->G4 = 1./2.+ pgf->DG4;
-   pgf->G4_phi = aalpha*phi;
-   pgf->G4_phiphi = aalpha;
+    pgf->G2 = X - pow(pba->H0,2)*potential_amplitude/pow(phi,potential_exponent);
+    pgf->G2_X = 1.;
+    pgf->G2_phi = pow(pba->H0,2)*potential_amplitude*potential_exponent/pow(phi,1.+potential_exponent);
+    pgf->G2_phiphi = -pow(pba->H0,2)*potential_amplitude*potential_exponent*(potential_exponent+1.)/pow(phi,2.+potential_exponent);
+
+    pgf->DG4 = coupling*pow(shifted_phi_squared,2.)/2.;
+    pgf->G4 = 1./2.+pgf->DG4;
+    pgf->G4_phi = 2.*coupling*phi*shifted_phi_squared;
+    pgf->G4_phiphi = 4.*coupling*pow(phi,2.)+2.*coupling*shifted_phi_squared;
+    pgf->G4_phiphiphi = 12.*coupling*phi;
   }
 
-
-
-
-  else if(pba->gravity_model_smg == EQMp){
-
-  
-
-    double llambda = pba->parameters_smg[2];
-    double ssigma = pba->parameters_smg[3];
-    double aalpha = pba->parameters_smg[4];
-    double phi2today = pba->parameters_smg[5];
-    
-   pgf->G2 = X - pow(pba->H0,2)*llambda/pow(phi,ssigma);
-   pgf->G2_X = 1.;
-   pgf->G2_phi = pow(pba->H0,2)*llambda*ssigma/pow(phi,1.+ssigma);
-   pgf->G2_phiphi = -pow(pba->H0,2)*llambda*ssigma*(ssigma+1.)/pow(phi,2.+ssigma);
-
-   pgf->DG4 = aalpha*(pow(phi,2.)-phi2today)/2.;
-   pgf->G4 = 1./2.+ aalpha*(pow(phi,2.)-phi2today)/2.;
-   pgf->G4_phi = aalpha*phi;
-   pgf->G4_phiphi = aalpha;
-  }
-
-
-   else if(pba->gravity_model_smg == EQGammaMu){
-
-  
-
-    double llambda = pba->parameters_smg[2];
-    double ssigma = pba->parameters_smg[3];
-    double aalpha = pba->parameters_smg[4];
-    double phi2today = pba->parameters_smg[5];
-    
-   pgf->G2 = X - pow(pba->H0,2)*llambda/pow(phi,ssigma);
-   pgf->G2_X = 1.;
-   pgf->G2_phi = pow(pba->H0,2)*llambda*ssigma/pow(phi,1.+ssigma);
-   pgf->G2_phiphi = -pow(pba->H0,2)*llambda*ssigma*(ssigma+1.)/pow(phi,2.+ssigma);
-
-   pgf->DG4 = aalpha*(pow(phi,2.)-phi2today)*(pow(phi,2.)-phi2today)/2.;
-   pgf->G4 = 1./2.+ aalpha*(pow(phi,2.)-phi2today)*(pow(phi,2.)-phi2today)/2.;
-   pgf->G4_phi = 2*aalpha*phi*(pow(phi,2.)-phi2today);
-   pgf->G4_phiphi = 4*aalpha*phi*phi+2*aalpha*(pow(phi,2.)-phi2today);
-   pgf->G4_phiphiphi = 12*aalpha*phi;
-   
-  
-  }
-
-
-
-
-
-    else if(pba->gravity_model_smg == EQ){
-
-    double llambda = pba->parameters_smg[2];
-    double ssigma = pba->parameters_smg[3];
-    double aalpha = pba->parameters_smg[4];
-  
-    
-   pgf->G2 = X - pow(pba->H0,2)*llambda/pow(phi,ssigma);
-   pgf->G2_X = 1.;
-   pgf->G2_phi = pow(pba->H0,2)*llambda*ssigma/pow(phi,1.+ssigma);
-   pgf->G2_phiphi = -pow(pba->H0,2)*llambda*ssigma*(ssigma+1.)/pow(phi,2.+ssigma);
-
-   pgf->DG4 = aalpha*pow(phi,2.)/2.;
-   pgf->G4 = 1./2.+ aalpha*pow(phi,2.)/2.;
-   pgf->G4_phi = aalpha*phi;
-   pgf->G4_phiphi = aalpha;
-  }
-
-
-
-
-
-
-
-
-
-  else if(pba->gravity_model_smg == TG){
-    double llambda = pba->parameters_smg[2];
-    double ssigma = pba->parameters_smg[3];
-    double aalpha = pba->parameters_smg[4];
-    
-   pgf->G2 = X - pow(pba->H0,2)*llambda*exp(-ssigma*phi);
-   pgf->G2_X = 1.;
-   pgf->G2_phi = pow(pba->H0,2)*llambda*ssigma*exp(-ssigma*phi);
-   pgf->G2_phiphi = -pow(pba->H0,2)*llambda*ssigma*ssigma*exp(-ssigma*phi);
-
-   pgf->DG4       = aalpha*phi*phi/2.;
-   pgf->G4        = 1./2.+ aalpha*phi*phi/2.;
-   pgf->G4_phi    = aalpha*phi;
-   pgf->G4_phiphi = aalpha;
-
- 
-  }
 
 
 
@@ -1309,37 +1150,10 @@ int gravity_models_initial_conditions_smg(
 
 
     
-    case EQGeff:
-			pvecback_integration[pba->index_bi_phi_smg] =  pow(10.0,pba->parameters_smg[0]);
-			pvecback_integration[pba->index_bi_phi_prime_smg] = pow(10.0,pba->parameters_smg[1]); 
-			break;
-    
-
-
-    case EQ:
-			pvecback_integration[pba->index_bi_phi_smg] = pow(10.0,pba->parameters_smg[0]);
-			pvecback_integration[pba->index_bi_phi_prime_smg] = pow(10.0,pba->parameters_smg[1]);
-			break;
-
-    
-    case EQMp:
-			pvecback_integration[pba->index_bi_phi_smg] = pow(10.0,pba->parameters_smg[0]);
-			pvecback_integration[pba->index_bi_phi_prime_smg] = pow(10.0,pba->parameters_smg[1]);
-			break;
-    
-      case EQGammaMu:
-			pvecback_integration[pba->index_bi_phi_smg] = pow(10.0,pba->parameters_smg[0]);
-			pvecback_integration[pba->index_bi_phi_prime_smg] = pow(10.0,pba->parameters_smg[1]);
-			break;
-
-
-    case TG:
-			pvecback_integration[pba->index_bi_phi_smg] =  pow(10.0,pba->parameters_smg[0]);
-			pvecback_integration[pba->index_bi_phi_prime_smg] =  pow(10.0,pba->parameters_smg[1]);
-			break;
-
-
-
+    case CCDE:
+				pvecback_integration[pba->index_bi_phi_smg] = pow(10.0,pba->parameters_smg[0]);
+				pvecback_integration[pba->index_bi_phi_prime_smg] = pow(10.0,pba->parameters_smg[1]);
+				break;
 	  case nkgb:
 		  {
 				/* Action is
@@ -1497,40 +1311,11 @@ int gravity_models_print_stdout_smg(
 
 
    
-    case EQGeff:
-      printf("Modified gravity: EQGeff with parameters: \n");
-      printf("aalpha=%g,ssigma=%g,llambda=%g, phi_ini = %g (phi_0 = %g), phi_prime_ini = %g ,phi^2_shift = %g\n",
+    case CCDE:
+      printf("Modified gravity: Curvature-Coupled Dark Energy (CCDE) with parameters: \n");
+      printf("alpha=%g, sigma=%g, Lambda=%g, phi_ini=%g (phi_0=%g), phi_prime_ini=%g, phi_today^2=%g\n",
          pba->parameters_smg[4],pba->parameters_smg[3],pba->parameters_smg[2],pow(10.0,pba->parameters_smg[0]),pba->phi_0_smg,pow(10.0,pba->parameters_smg[1]),pba->parameters_smg[5]);
     break;
-
-
-    case EQ:
-      printf("Modified gravity: EQ with parameters: \n");
-      printf("aalpha=%g,ssigma=%g,llambda=%g, phi_ini = %g (phi_0 = %g), phi_prime_ini = %g\n",
-         pba->parameters_smg[3],pba->parameters_smg[2],pba->parameters_smg[1],pow(10.0,pba->parameters_smg[0]),pba->phi_0_smg,pow(10.0,pba->parameters_smg[1]));
-    break;
-
-   
-    case EQMp:
-      printf("Modified gravity: EQMp with parameters: \n");
-      printf("aalpha=%g,ssigma=%g,llambda=%g, phi_ini = %g (phi_0 = %g), phi_prime_ini = %g ,phi^2_today = %g\n",
-         pba->parameters_smg[4],pba->parameters_smg[3],pba->parameters_smg[2],pow(10.0,pba->parameters_smg[0]),pba->phi_0_smg,pow(10.0,pba->parameters_smg[1]),pba->parameters_smg[5]);
-    break;
-
-case EQGammaMu:
-      printf("Modified gravity: EQGammaMu with parameters: \n");
-      printf("aalpha=%g,ssigma=%g,llambda=%g, phi_ini = %g (phi_0 = %g), phi_prime_ini = %g ,phi^2_today = %g\n",
-         pba->parameters_smg[4],pba->parameters_smg[3],pba->parameters_smg[2],pow(10.0,pba->parameters_smg[0]),pba->phi_0_smg,pow(10.0,pba->parameters_smg[1]),pba->parameters_smg[5]);
-    break;
-
-
-
-    case TG:
-      printf("Modified gravity: Thawing Gravity with parameters: \n");
-      printf("aalpha=%g,ssigma=%g,llambda=%g, phi_ini = %g (phi_0 = %g), phi_prime_ini = %g\n",
-         pba->parameters_smg[3],pba->parameters_smg[2],pba->parameters_smg[1],pow(10.0,pba->parameters_smg[0]),pba->phi_0_smg,pow(10.0,pba->parameters_smg[1]));
-    break;
-
 
 
 

@@ -546,8 +546,7 @@ int input_shooting(struct file_content * pfc,
                                        "Omega_ini_dcdm",
                                        "omega_ini_dcdm",
                                        "Omega_smg",
-                                      "M2_today_smg",
-                                      "G_eff_today_smg"}; //EQ EQGeff
+                                       "M2_today_smg"};
 
   /* array of corresponding parameters that must be adjusted in order to meet the target (= unknown parameters) */
   char * const unknown_namestrings[] = {"h",                        /* unknown param for target '100*theta_s' */
@@ -558,8 +557,7 @@ int input_shooting(struct file_content * pfc,
                                         "Omega_dcdmdr",             /* unknown param for target 'Omega_ini_dcdm' */
                                         "omega_dcdmdr",             /* unknown param for target 'omega_ini_dcdm' */
                                         "shooting_parameter_smg",   /* unknown param for target 'Omega_smg' */
-                                        "param_shoot_M2_smg",        /* unknown param for target 'M2_today_smg' */
-                                        "param_shoot_G_eff_smg"};    /* unknown param for target 'G_eff_today_smg' */ //EQ EQGeff
+                                        "param_shoot_M2_smg"};       /* unknown param for target 'M2_today_smg' */
 
   /* for each target, module up to which we need to run CLASS in order
      to compute the targetted quantities (not running the whole code
@@ -572,8 +570,7 @@ int input_shooting(struct file_content * pfc,
                                         cs_background,     /* computation stage for target 'Omega_ini_dcdm' */
                                         cs_background,     /* computation stage for target 'omega_ini_dcdm' */
                                         cs_background,     /* computation stage for target 'Omega_smg' */
-                                        cs_background,     /* computation stage for target 'M2_today_smg' */
-                                        cs_background};    /* computation stage for target 'G_eff_today_smg' */ // EQ EQGeff
+                                        cs_background};    /* computation stage for target 'M2_today_smg' */
 
   struct fzerofun_workspace fzw;
 
@@ -587,7 +584,7 @@ int input_shooting(struct file_content * pfc,
   class_call(input_read_parameters(pfc,ppr,pba,pth,ppt,ptr,ppm,phr,pfo,ple,psd,pop,
                                      errmsg),
                errmsg,
-               errmsg); //EQ This was added to see if alpha=0 or not. In case alpha ~ 0, there must not be shooting for M2_today_smg, otherwise it will be problematic. 
+               errmsg); // CCDE: inspect alpha before deciding whether the M2 target needs shooting.
 
   /** Do we need to fix unknown parameters? */
   unknown_parameters_size = 0;
@@ -616,8 +613,8 @@ int input_shooting(struct file_content * pfc,
     }
   }
 
-// EQ EQGammaMu: if we want to tune M2_today_smg, we need to shoot for it. This is only possible if alpha != 0. 
-  if(pba->gravity_model_smg == EQGammaMu && (pba->parameters_smg[4] > 0.00001||pba->parameters_smg[4] <-0.00001)){
+  /* CCDE: tune the shift so M2(z=0)=1 whenever the coupling is active. */
+  if(pba->gravity_model_smg == CCDE && fabs(pba->parameters_smg[4]) > 1.e-5){
     target_indices[unknown_parameters_size] = 8; // M2_today_smg
     fzw.required_computation_stage = MAX(fzw.required_computation_stage,target_cs[8]);
     unknown_parameters_size++;
@@ -959,10 +956,6 @@ int input_needs_shooting_for_target(struct file_content * pfc,
       if (target_value == 0.)
         *needs_shooting = _FALSE_;
       break;
-      // EQ EQGeff
-    case G_eff_today_smg: 
-      *needs_shooting = _TRUE_;
-     break;
     case M2_today_smg:
   default:
     /* Default is no additional checks */
@@ -1014,8 +1007,7 @@ int input_find_root(double *xzero,
 
   /** Then we do a linear hunt for the boundaries */
   /* Try fifteen times to go above and below the root (i.e. where shooting succeeds) */
-  // EQ: iter was 15 originally which was not enough in some cases.
-  // EQs
+  // CCDE shooting can require more trials than the original limit of 15.
   for (iter=1; iter<100; iter++){
     x2 = x1 - dx;
     /* Try three times to get a 'reasonable' value, i.e. no CLASS error */
@@ -1351,10 +1343,6 @@ int input_get_guess(double *xguess,
       xguess[index_guess] = ba.parameters_smg[ba.tuning_index_2_smg];
       dxdy[index_guess] = 1;
       break;
-    case G_eff_today_smg:    // EQ EQGeff
-      xguess[index_guess] = ba.parameters_smg[ba.tuning_index_2_smg];
-      dxdy[index_guess] = 1;
-      break;
     }
   }
 
@@ -1584,15 +1572,6 @@ int input_try_unknown_parameters(double * unknown_parameter,
          ba.tuning_index_2_smg,
          ba.parameters_smg[ba.tuning_index_2_smg]
         );
-      break;
-    case G_eff_today_smg:    //EQ EQGeff
-      output[i] = ba.background_table[(ba.bt_size-1)*ba.bg_size+ba.index_bg_G_eff_smg] -  ba.G_eff_today_smg;
-        printf("Geff_today = %e, want %e, param[%i]=%e\n",
-         ba.background_table[(ba.bt_size-1)*ba.bg_size+ba.index_bg_G_eff_smg],
-         ba.G_eff_today_smg,
-         ba.tuning_index_2_smg,
-         ba.parameters_smg[ba.tuning_index_2_smg]
-        );  
       break;
     }
   }

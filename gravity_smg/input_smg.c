@@ -327,8 +327,6 @@ int input_default_params_smg(
   pba->Omega0_smg = 0.; /* Scalar field defaults */
   pba->M2_today_smg = 1.; //*Planck mass today*/
   pba->M2_tuning_smg = _TRUE_; //* Tune Planck mass?*/
-  pba->G_eff_today_smg = 1.; //*Newton's gravitational constant today*/ //EQ EQGeff
-  pba->G_eff_tuning_smg = _TRUE_; //* Tune G_eff_today */ //EQ EQGeff
   pba->Omega_smg_debug = 0;
   pba->field_evolution_smg = _FALSE_; /* does the model require solving the background equations? */
   pba->M2_evolution_smg = _FALSE_; /* does the model require integrating M2 from alpha_M? */

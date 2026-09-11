@@ -9,30 +9,30 @@
             "/Users/abdolalb/CosmoPackages/Cobaya/cobaya/lib/python3.9/site-packages/numpy/core/include/numpy/ndarrayobject.h",
             "/Users/abdolalb/CosmoPackages/Cobaya/cobaya/lib/python3.9/site-packages/numpy/core/include/numpy/ndarraytypes.h",
             "/Users/abdolalb/CosmoPackages/Cobaya/cobaya/lib/python3.9/site-packages/numpy/core/include/numpy/ufuncobject.h",
-            "/Users/abdolalb/hi_class_ExtendedQuintessence/include/class.h"
+            "/Users/abdolalb/hi_class_CCDE/include/class.h"
         ],
         "extra_compile_args": [
             "-std=c++11"
         ],
         "include_dirs": [
             "/Users/abdolalb/CosmoPackages/Cobaya/cobaya/lib/python3.9/site-packages/numpy/core/include",
-            "/Users/abdolalb/hi_class_ExtendedQuintessence/python/../include",
-            "/Users/abdolalb/hi_class_ExtendedQuintessence/python/../external/heating",
-            "/Users/abdolalb/hi_class_ExtendedQuintessence/python/../external/RecfastCLASS",
-            "/Users/abdolalb/hi_class_ExtendedQuintessence/python/../external/HyRec2020",
-            "/Users/abdolalb/hi_class_ExtendedQuintessence/python/../gravity_smg/include"
+            "/Users/abdolalb/hi_class_CCDE/python/../include",
+            "/Users/abdolalb/hi_class_CCDE/python/../external/heating",
+            "/Users/abdolalb/hi_class_CCDE/python/../external/RecfastCLASS",
+            "/Users/abdolalb/hi_class_CCDE/python/../external/HyRec2020",
+            "/Users/abdolalb/hi_class_CCDE/python/../gravity_smg/include"
         ],
         "language": "c++",
         "libraries": [
             "class"
         ],
         "library_dirs": [
-            "/Users/abdolalb/hi_class_ExtendedQuintessence/python/..",
+            "/Users/abdolalb/hi_class_CCDE/python/..",
             "/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin"
         ],
         "name": "classy",
         "sources": [
-            "/Users/abdolalb/hi_class_ExtendedQuintessence/python/../python/classy.pyx"
+            "/Users/abdolalb/hi_class_CCDE/python/../python/classy.pyx"
         ]
     },
     "module_name": "classy"

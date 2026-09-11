@@ -14,8 +14,8 @@ class
 hi_class
 build/
 tmp/
+output/
 
 # Python
 __pycache__/
 *.pyc
-

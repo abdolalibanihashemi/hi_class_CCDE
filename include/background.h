@@ -25,7 +25,7 @@ enum gravity_model {propto_omega, propto_scale,
     constant_alphas,
     eft_alphas_power_law, eft_gammas_power_law, eft_gammas_exponential,
     galileon, nkgb,
-    brans_dicke,EQ,EQGeff,TG,EQMp,EQGammaMu,
+    brans_dicke, CCDE,
     quintessence_monomial, quintessence_tracker,
     alpha_attractor_canonical
 };
@@ -211,10 +211,6 @@ struct background
   int M2_tuning_smg; /**< whether we want secondary tuning for M2(today) */
   int tuning_index_2_smg;     /**< index in scf_parameters used for tuning (the Planck mass) */
   double M2_today_smg;
-
-//EQ EQGeff
-  int G_eff_tuning_smg;  /**< whether we want tertiary tuning for Geff(today) */
-  double G_eff_today_smg;
 
   short output_background_smg; /**< flag regulating the amount of information printed onbackground.dat output */
 
