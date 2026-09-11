@@ -9,9 +9,9 @@ The implementation accompanies the manuscript *Cosmological Signatures of Curvat
 In the Jordan frame, CCDE is defined by
 
 $$
-S = \int d^4x\sqrt{-g}\left\{\frac{M_{\rm P}^2}{2}[1+f(\varphi)]R
+S = \int d^4x\sqrt{-g}\left\lbrace\frac{M_{\rm P}^2}{2}[1+f(\varphi)]R
 -\frac12 g^{\mu\nu}\partial_\mu\varphi\partial_\nu\varphi
--V(\varphi)+\mathcal L_m\right\},
+-V(\varphi)+\mathcal L_m\right\rbrace,
 $$
 
 with
