@@ -113,13 +113,8 @@ The original hi_class models and source tree are retained. Earlier experimental 
 
 ## Citation
 
-If this implementation contributes to a publication, please cite the accompanying CCDE manuscript when its bibliographic record becomes available, together with the relevant hi_class and CLASS papers:
+A. Banihashemi, F. Hassani, A. Casalino, D. F. Mota, and E. Bellini, [*Cosmological Signatures of Curvature-Coupled Dark Energy*]*(https://arxiv.org/abs/2609.15836).
 
-1. M. Zumalacárregui, E. Bellini, I. Sawicki, J. Lesgourgues, and P. G. Ferreira, [*hi_class: Horndeski in the Cosmic Linear Anisotropy Solving System*](https://doi.org/10.1088/1475-7516/2017/08/019), JCAP 08 (2017) 019.
-2. E. Bellini, I. Sawicki, and M. Zumalacárregui, [*hi_class: Background Evolution, Initial Conditions and Approximation Schemes*](https://arxiv.org/abs/1909.01828).
-3. J. Lesgourgues, [*The Cosmic Linear Anisotropy Solving System (CLASS) I: Overview*](https://arxiv.org/abs/1104.2932), and D. Blas, J. Lesgourgues, and T. Tram, [*CLASS II: Approximation schemes*](https://arxiv.org/abs/1104.2933).
-
-Please also retain the citation guidance in the original [`README.rst`](README.rst).
 
 ## Contact
 
