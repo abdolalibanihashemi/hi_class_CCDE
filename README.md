@@ -109,7 +109,41 @@ The original hi_class models and source tree are retained. Earlier experimental 
 - `gravity_smg/gravity_models_smg.c` — model selection, Horndeski functions, initial conditions, and parameter reporting.
 - `source/input.c` — closure and present-day Planck-mass shooting logic.
 - `source/perturbations.c` — scalar perturbation transfer output used by the direct-$\delta\varphi$ implementation.
+- `DataGenerator/` — parameter files and shell scripts that generate the $\Lambda$CDM and CCDE theoretical curves used in the paper.
+- `Notebooks4Figs/` — Jupyter notebooks, observational inputs, and PDF outputs for reproducing the paper figures.
 - `README.rst` — original hi_class usage and attribution notes.
+
+## Reproducing the paper figures
+
+First build the command-line executable in the repository root:
+
+```bash
+make -j class
+```
+
+The four subdirectories of `DataGenerator/` produce the background, transfer-function, CMB, lensing, and ISW outputs required by the notebooks. Generate the $\Lambda$CDM reference curves and the CCDE parameter grids from the repository root with:
+
+```bash
+(cd DataGenerator/transfer_functions/LCDM && ./run_single.sh)
+(cd DataGenerator/transfer_functions && ./RunAll.sh)
+(cd DataGenerator/cmb/LCDM && ./run_single.sh)
+(cd DataGenerator/cmb && ./RunAll.sh)
+(cd DataGenerator/isw1/LCDM && ./run_single.sh)
+(cd DataGenerator/isw1 && ./RunAll.sh)
+(cd DataGenerator/isw2/LCDM && ./run_single.sh)
+(cd DataGenerator/isw2 && ./RunAll.sh)
+```
+
+These scripts run the model grid used in the analysis and may take some time. Generated CLASS outputs remain inside the corresponding `DataGenerator/` subdirectory. The compiled executable and generated outputs are intentionally not committed.
+
+The notebooks require Jupyter, NumPy, Matplotlib, and SciPy. Launch Jupyter from `Notebooks4Figs/` after generating the curves:
+
+```bash
+cd Notebooks4Figs
+jupyter lab
+```
+
+Each notebook reads the relevant outputs directly from `../DataGenerator/` and writes publication-ready PDFs to `Notebooks4Figs/Figs/`. The observational inputs used for the expansion-history and CMB comparisons are included in `Notebooks4Figs/Data/`.
 
 ## Citation
 

@@ -15,7 +15,13 @@ hi_class
 build/
 tmp/
 output/
+DataGenerator/**/run_sigma*/
+DataGenerator/**/LCDM/*.dat
+DataGenerator/**/LCDM/output.txt
+DataGenerator/**/LCDM/*parameters.ini
+DataGenerator/**/LCDM/*_unused_parameters
 
 # Python
 __pycache__/
 *.pyc
+.ipynb_checkpoints/
